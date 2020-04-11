@@ -5,7 +5,6 @@ from flask import Flask, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
 from twilio.rest import Client
 from twilio.http.http_client import TwilioHttpClient
-
 # Twilio account info
 account_sid = "ACa18e8f3b69e50ff592fac7bde0bc11e4"
 auth_token = "c57847ffe70526a225a972b190249f75"
@@ -42,7 +41,7 @@ class Comment(db.Model):
 def index():
     return render_template("main_page.html")
 @app.route("/", methods=['GET', 'POST'])
-def boobs():
+def serve():
     from flask import request
     # get SMS metadata
     msg_from = request.values.get("From", None)
@@ -63,34 +62,32 @@ def boobs():
         comment = Comment(id= 0,content="hewloo world!")
         db.session.add(comment)
         db.session.commit()
-    #reply="time to cleanse"
-    #get values that user posted; inorder to redirect to the home page=?login=successful
-    #form = cgi.FieldStorage()
-    # if form.getvalue('username'):
-    #     login_username = form.getvalue('username')
-    #     return str(login_username)
     uname = "name"
-    #if request.forms.get("uname_phone"):
-    #    uname = request.forms.get("uname_phone")
-    #return redirect("/home")
     return str(uname)
-
 @app.route("/home", methods=['GET', 'POST'])
-def vagina():
+def home():
     from flask import request
     patro = "bye"
     return str(patro)
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     from flask import request
     reg = "in register page"
-    return str(reg)
+    uname = request.form['username']
+    pword = request.form['password']
+    phone = request.form['phone']
+    email = request.form['email']
+    reg+= uname
+    reg+= pword
+    reg+= phone
+    reg+= email
+    return render_template("login.html")
+    #return str(reg)
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     from flask import request
     log = "in login page"
-    uname = request.form['uname_phone']
+    uname = request.form['login']
     pword = request.form['password']
     log += uname
     log += pword

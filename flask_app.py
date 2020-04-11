@@ -3,7 +3,6 @@ import apiai
 import os
 from flask import Flask, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
-#from flask_app import db
 from twilio.rest import Client
 from twilio.http.http_client import TwilioHttpClient
 
@@ -15,7 +14,6 @@ account_num = "+16267885185"
 proxy_client = TwilioHttpClient()
 proxy_client.session.proxies = {'https': os.environ['https_proxy']}
 client = Client(account_sid, auth_token, http_client=proxy_client)
-
 # api.ai account info
 CLIENT_ACCESS_TOKEN = "746bcfef28a342568b3feb7d67e05eca"
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
@@ -43,8 +41,6 @@ class Comment(db.Model):
 @app.route('/')
 def index():
     return render_template("main_page.html")
-
-
 @app.route("/", methods=['GET', 'POST'])
 def boobs():
     from flask import request
@@ -69,9 +65,15 @@ def boobs():
         db.session.commit()
     #reply="time to cleanse"
     #get values that user posted; inorder to redirect to the home page=?login=successful
-
-    return redirect("/home")
-    #return str(reply)
+    #form = cgi.FieldStorage()
+    # if form.getvalue('username'):
+    #     login_username = form.getvalue('username')
+    #     return str(login_username)
+    uname = "name"
+    #if request.forms.get("uname_phone"):
+    #    uname = request.forms.get("uname_phone")
+    #return redirect("/home")
+    return str(uname)
 
 @app.route("/home", methods=['GET', 'POST'])
 def vagina():
@@ -79,6 +81,20 @@ def vagina():
     patro = "bye"
     return str(patro)
 
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    from flask import request
+    reg = "in register page"
+    return str(reg)
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    from flask import request
+    log = "in login page"
+    uname = request.form['uname_phone']
+    pword = request.form['password']
+    log += uname
+    log += pword
+    return str(log)
 
 if __name__ == "__main__":
     app.run(debug=True)

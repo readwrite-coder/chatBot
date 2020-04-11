@@ -25,7 +25,7 @@
         </nav>
 
         <h1 align="center">Login</h1>
-        <form align="center">
+        <form align="center" action="/login" method="POST">
             <label for="uname_phone">Username or Phone number:</label><br>
             <input type="text" id="uname_phone" name="uname_phone"><br>
             <label for="password">Password:</label><br>
@@ -34,23 +34,21 @@
         </form>
         <br><br><br><br>
         <h1 align="center">Register</h1>
-        <form align="center">
+        <form align="center" action="/register" method="POST">
             <label for="username">Username:</label><br>
             <input type="text" id="username" name="username"><br>
-
             <label for="password">Password:</label><br>
             <input type="text" id="password" name="password"><br>
             <label for="phone">Phone number:</label><br>
             <input type="text" id="phone" name="phone"><br>
-
             <input type="submit" class="btn btn-success" value="Register">
         </form>
         <br><br><br><br>
         <div class="container">
             <div class="row">
-                <form action="." method="POST">
+                <form action="/home" method="POST">
                     <textarea class="form-control" name="contents" placeholder="Enter a comment"></textarea>
-                    <input type="submit" class="btn btn-success" value="Post comment">
+                    <input type="submit" class="btn btn-success" value="Post a fooking comment">
                 </form>
             </div>
         </div>

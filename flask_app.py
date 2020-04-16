@@ -1,7 +1,7 @@
 import json
 import apiai
 import os
-from flask import Flask, render_template, redirect
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from twilio.rest import Client
 from twilio.http.http_client import TwilioHttpClient
@@ -34,6 +34,13 @@ class Comment(db.Model):
     __tablename__ = "comments"
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(4096))
+class Users(db.Model):
+    __tablename__ = "users"
+    username = db.Column(db.String(4096))
+    password = db.Column(db.String(4096))
+    email    = db.Column(db.String(4096), primary_key=True)
+    phone    = db.Column(db.Integer)
+    register = db.Column(db.Boolean)
 #db.create_all()
 
 #@app.route('/hello')

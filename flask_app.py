@@ -1,10 +1,14 @@
 import json
 import apiai
 import os
+import mysql.connector
 from flask import Flask, render_template
-from flask_sqlalchemy import SQLAlchemy
 from twilio.rest import Client
 from twilio.http.http_client import TwilioHttpClient
+#from bokeh.plotting import figure, output_file, show
+#import pandas as pd
+#from bokeh.charts import Histogram
+#from bokeh.embed import components
 # Twilio account info
 account_sid = "ACa18e8f3b69e50ff592fac7bde0bc11e4"
 auth_token = "c57847ffe70526a225a972b190249f75"
@@ -18,32 +22,17 @@ CLIENT_ACCESS_TOKEN = "746bcfef28a342568b3feb7d67e05eca"
 ai = apiai.ApiAI(CLIENT_ACCESS_TOKEN)
 
 app = Flask(__name__)
-
-# database setup info
-SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://atrinh96:At1996at!@atrinh96.mysql.pythonanywhere-services.com/atrinh96$chatbot".format(
-    username="atrinh96",
-    password="At1996at!",
-    hostname="atrinh96.mysql.pythonanywhere-services.com",
-    databasename="atrinh96$chatbot",
+mydb = mysql.connector.connect(
+    host="atrinh96.mysql.pythonanywhere-services.com",
+    user="atrinh96",
+    passwd="At1996at!",
+    database="atrinh96$test"
 )
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
-app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
-class Comment(db.Model):
-    __tablename__ = "comments"
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(4096))
-class Users(db.Model):
-    __tablename__ = "users"
-    username = db.Column(db.String(4096))
-    password = db.Column(db.String(4096))
-    email    = db.Column(db.String(4096), primary_key=True)
-    phone    = db.Column(db.Integer)
-    register = db.Column(db.Boolean)
-#db.create_all()
+mycursor = mydb.cursor()
+#mycursor.execute("CREATE TABLE Users (user VARCHAR(255), password VARCHAR(255))")
+#mycursor.execute("CREATE TABLE Tony (user VARCHAR(255), password VARCHAR(255))")
+#mycursor.close()
 
-#@app.route('/hello')
 @app.route('/')
 def index():
     return render_template("main_page.html")
@@ -66,16 +55,42 @@ def serve():
         response = response_obj["result"]["fulfillment"]["speech"]
         # send SMS response back via twilio
         reply=client.messages.create(to=msg_from, from_= account_num, body=response)
-        comment = Comment(id= 0,content="hewloo world!")
-        db.session.add(comment)
-        db.session.commit()
     uname = "name"
     return str(uname)
+
 @app.route("/home", methods=['GET', 'POST'])
 def home():
     from flask import request
     patro = "bye"
     return str(patro)
+
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    from flask import request
+    log = "in the login page"
+    uname = request.values.get("uname", None)
+    pword = request.values.get("passwd", None)
+    mycursor.execute("SELECT * FROM Users")
+    myresult = mycursor.fetchone()
+    log += str(myresult)
+
+    x = [1,2,3,4,5]
+    y = [4,6,2,4,3]
+    #output_file("platform_page.html")
+    #p = figure(
+    #    title='Simple Example',
+    #    x_axis_label='X Axis',
+    #    y_axis_label='Y Axis'
+    #)
+    #p.line(x,y, legend='Test', line_width=2)
+    #script, div = components(p)
+    #return render_template("platform_page.html", script=script, div=div)
+    return str(log)
+
+
+
+
+
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     from flask import request
@@ -83,22 +98,8 @@ def register():
     uname = request.form['username']
     pword = request.form['password']
     phone = request.form['phone']
-    email = request.form['email']
-    reg+= uname
-    reg+= pword
-    reg+= phone
-    reg+= email
     return render_template("login.html")
     #return str(reg)
-@app.route("/login", methods=['GET', 'POST'])
-def login():
-    from flask import request
-    log = "in login page"
-    uname = request.form['login']
-    pword = request.form['password']
-    log += uname
-    log += pword
-    return str(log)
 
 if __name__ == "__main__":
     app.run(debug=True)

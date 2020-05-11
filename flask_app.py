@@ -5,10 +5,16 @@ import mysql.connector
 from flask import Flask, render_template
 from twilio.rest import Client
 from twilio.http.http_client import TwilioHttpClient
-#from bokeh.plotting import figure, output_file, show
+
+from bokeh.plotting import figure, output_file, show
+from bokeh.embed import components
+#from bokeh.charts import Histogram
+
+#from flask import Flask, render_template, request
 #import pandas as pd
 #from bokeh.charts import Histogram
 #from bokeh.embed import components
+
 # Twilio account info
 account_sid = "ACa18e8f3b69e50ff592fac7bde0bc11e4"
 auth_token = "c57847ffe70526a225a972b190249f75"
@@ -29,9 +35,13 @@ mydb = mysql.connector.connect(
     database="atrinh96$test"
 )
 mycursor = mydb.cursor()
-#mycursor.execute("CREATE TABLE Users (user VARCHAR(255), password VARCHAR(255))")
-#mycursor.execute("CREATE TABLE Tony (user VARCHAR(255), password VARCHAR(255))")
-#mycursor.close()
+#mycursor.execute("SELECT user FROM Users")
+#myresult = mycursor.fetchall()
+#feature_names = [ ]
+#for users in myresult:
+#    feature_names.append(users)
+
+
 
 @app.route('/')
 def index():
@@ -64,42 +74,45 @@ def home():
     patro = "bye"
     return str(patro)
 
+@app.route("/data", methods=['GET', 'POST'])
+def data():
+    hello = "hello"
+    return str(hello)
+
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     from flask import request
     log = "in the login page"
     uname = request.values.get("uname", None)
     pword = request.values.get("passwd", None)
-    mycursor.execute("SELECT * FROM Users")
-    myresult = mycursor.fetchone()
+    mycursor.execute("SELECT user FROM Users")
+    myresult = mycursor.fetchall()
     log += str(myresult)
+    feature_names = [ ]
+    for users in myresult:
+        feature_names.append(users)
 
     x = [1,2,3,4,5]
     y = [4,6,2,4,3]
-    #output_file("platform_page.html")
-    #p = figure(
-    #    title='Simple Example',
-    #    x_axis_label='X Axis',
-    #    y_axis_label='Y Axis'
-    #)
-    #p.line(x,y, legend='Test', line_width=2)
-    #script, div = components(p)
-    #return render_template("platform_page.html", script=script, div=div)
-    return str(log)
-
-
-
-
+    output_file('platform_page.html')
+    p = figure(
+        title='Simple Example',
+        x_axis_label='X Axis',
+        y_axis_label='Y Axis'
+    )
+    p.line(x,y, legend='Test', line_width=2)
+    show(p)
+    script, div = components(p)
+    #return str(log)
+    return render_template("platform_page.html", script=script, div=div, feature_names=feature_names)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     from flask import request
-    reg = "in register page"
     uname = request.form['username']
     pword = request.form['password']
     phone = request.form['phone']
     return render_template("login.html")
-    #return str(reg)
 
 if __name__ == "__main__":
     app.run(debug=True)

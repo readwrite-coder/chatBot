@@ -1,7 +1,6 @@
 <html>
 
 <head>
-
 <link
     href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.5.min.css"
     rel="stylesheet" type="text/css">
@@ -15,18 +14,13 @@
 <link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-0.12.14.min.css" type="text/css" />
 <link rel="stylesheet" href="https://cdn.bokeh.org/bokeh/release/bokeh-tables-0.12.14.min.css" type="text/css">
 
-<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-0.12.14.min.js"></script>
-<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-api-0.12.14.min.js"></script>
-<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-0.12.14.min.js"></script>
-<script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-0.12.14.min.js"></script>
-
 </head>
 
 <body>
 <H1>Patient Portal</H1>
 
 <form action="/login">
-    <select name="feature_name">
+    <select name="feature_name" type="String">
 	{% for feature in feature_names %}
 		{% if feature == current_feature_name %}
 			<option selected value="{{ feature }}">{{ feature }}</option>
@@ -39,21 +33,11 @@
 </form>
 
 {{current_feature_name}}
-
-{% for feature in feature_names %}
-    <br>{{feature}}
-{% endfor %}
-
 <br>{{data}}
-<br>Headache Name:
-<br>Timestamp:
-<br>Duration:
-<br>Severity:
 
 {{ script|safe }}
 {{ div|safe }}
 
 </body>
-
 </html>
 
